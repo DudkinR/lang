@@ -1,0 +1,10 @@
+.close{
+position: absolute;
+    right: 10px;
+    top: 10px;
+    color: #fff;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 9999;
+}
