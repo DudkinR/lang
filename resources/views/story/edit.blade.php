@@ -4,8 +4,13 @@
 <div class="container">
     <div class="row justify-content-center">
        <!-- code-->
+            <a href="{{ route('stories') }}" >
+            <button  class="btn btn-primary">Back</button>
+         </a>
+
    <form method="POST" action="{{ route('story.update',$story) }}">
        @csrf
+@method('PUT')
        <input type="hidden" name="id" value="{{$story->id}}">
        <div class="form-group">
            <label for="title">title</label>

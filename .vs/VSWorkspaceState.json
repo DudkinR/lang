@@ -4,13 +4,14 @@
     "\\app",
     "\\app\\Http",
     "\\app\\Http\\Controllers",
+    "\\public",
+    "\\public\\js",
+    "\\public\\js\\games",
     "\\resources",
     "\\resources\\views",
-    "\\resources\\views\\components",
     "\\resources\\views\\page",
-    "\\resources\\views\\pict",
-    "\\routes"
+    "\\resources\\views\\tail"
   ],
-  "SelectedNode": "\\app\\Http\\Controllers\\PictController.php",
+  "SelectedNode": "\\app\\Http\\Controllers\\TailController.php",
   "PreviewInSolutionExplorer": false
 }

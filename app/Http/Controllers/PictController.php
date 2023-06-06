@@ -12,8 +12,13 @@ class PictController extends Controller
      */
     public function index()
     {
-        $pict_background=   Pict::where('path', 'storage/story/background/')->get();
-        $pict_personage=   Pict::where('path', 'storage/story/personage/')->get();
+        // order by id desc
+        $pict_background=   Pict::where('path', 'storage/story/background/')
+        ->orderBy('id', 'desc')
+        ->get();
+        $pict_personage=   Pict::where('path', 'storage/story/personage/')
+        ->orderBy('id', 'desc')
+        ->get();
         return view('pict.index', compact('pict_background','pict_personage'));
 
     }
@@ -171,39 +176,6 @@ class PictController extends Controller
         $pict=  Pict::find($id);
         $pict->name = $request->name;
         $pict->discription=$request->discription;
-        if($pict->path ==  'storage/story/background/'){
-            $type=1;
-            $path = storage_path('app/public/story/background');
-            $pathDB ='storage/story/background/';
-        }
-        elseif($pict->path ==  'storage/story/personage/'){
-            $type=2;
-            $path = storage_path('app/public/story/personage');
-            $pathDB ='storage/story/personage/';
-        }
-           
-        if($request->type!==$type){
-            if($request->type==1){
-                $newPath = storage_path('app/public/story/background');
-                $newPathDB ='storage/story/background/';
-            }
-            elseif($request->type==2){
-                $newPath = storage_path('app/public/story/personage');
-                $newPathDB ='storage/story/personage/';
-            }
-            // нужно переписать файл
-            $newName=$this->rename($type);
-            // move file to new    path
-$oldPath=$path.'/'.$pict->name.'.'.$pict->extension;
-$newPath=$newPath.'/'.$newName.'.'.$pict->extension;
-
-             //move file
-            rename($oldPath, $newPath);
-            //update  path db
-            $pict->path=$pathDB;
-            $pict->name=$newName;
-
-        }
         $pict->save();
         //pict.show
         return redirect()->route('pict.show', $pict->id);

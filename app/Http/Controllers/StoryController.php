@@ -1,8 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
-
 use   App\Models\Story;
 use   App\Models\Pagestory;
 use Illuminate\Http\Request;
@@ -14,10 +11,11 @@ class StoryController extends Controller
      */
     public function index()
     {
-        //
-        $stories = Story::all();
+        //Story::all()->orderBy('id', 'desc');
+        $stories = Story::orderBy('id', 'desc')->get();
         return view('story.index', compact('stories'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -25,7 +23,7 @@ class StoryController extends Controller
     public function create()
     {
         //
-return view('story.create');
+        return view('story.create');
     }
 
     /**
@@ -45,7 +43,7 @@ return view('story.create');
         $story->save();
         // select all pages from story attach
        // $pagestories = $story->pagestory()->get();
-    return redirect()->route('story.show', compact('story'));
+        return redirect()->route('story.show', compact('story'));
 
     }
 
@@ -67,7 +65,7 @@ return view('story.create');
     {
         //
        // $story=Story::find($story->id);
-return view('story.edit', compact('story'));
+        return view('story.edit', compact('story'));
     }
 
     /**
@@ -76,15 +74,15 @@ return view('story.edit', compact('story'));
     public function update(Request $request, Story $story)
     {
         //
-$request->validate([
-            'title' => 'required',
-            'anatation' => 'required',
-            'lng' => 'required',
-        ]);
-$story->update($request->all());
-$story->save();
-$pagestories= $story->pagestory()->get();
-return redirect()->route('story.show', compact('story','pagestories'));
+        $request->validate([
+                    'title' => 'required',
+                    'anatation' => 'required',
+                    'lng' => 'required',
+                ]);
+        $story->update($request->all());
+        $story->save();
+        $pagestories= $story->pagestory()->get();
+        return redirect()->route('story.show', compact('story','pagestories'));
 
     }
 

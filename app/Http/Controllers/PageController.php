@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use   App\Models\Pagestory;
 use   App\Models\Story;
 use   App\Models\Tail;
-use   Aapp\Models\Pict;
+use   App\Models\Pict;
 
 class PageController extends Controller
 {
@@ -16,9 +16,17 @@ class PageController extends Controller
     public function index(Request $request)
     {
         //
-        $store=Story::find($request->story_id);
-        $pages = $store->pagestory()->get();
-        return view('page.index', compact('$pages','store'));
+        if($request->story_id){
+            $store=Story::find($request->story_id);
+            $pages = $store->pagestory()->get();
+            return view('page.index', compact('pages','store'));
+        }
+        else{
+            $pages = Pagestory::all();
+            return view('page.index', compact('pages'));
+
+        }
+        
         
     }
 
@@ -29,7 +37,16 @@ class PageController extends Controller
     {
         //
         $store_id=$request->story_id;
-        return view('page.create',compact('store_id'));
+        $pict_background=   Pict::where('path', 'storage/story/background/')->orderBy('id', 'desc')->get();
+        $pict_personage=   Pict::where('path', 'storage/story/personage/')->orderBy('id', 'desc')->get();
+        return view('page.create',
+        [
+            'store_id'=>$store_id,
+            'backgrounds'=>$pict_background,
+            'personages'=>$pict_personage   
+        ]
+
+        );
     }
 
     /**
@@ -45,9 +62,20 @@ class PageController extends Controller
     if ($request->background) {
         $pagestory->background = $request->background;
     }
+    // add  new    session background
+    session(['background' => $request->background]);
     $pagestory->story_id = $request->story_id;
     $order= $this->maxorder($request->story_id);
     $pagestory->order = $order+1;
+    $personages = [];
+        foreach ($request->all() as $key => $value) {
+            if (strpos($key, 'personage_') !== false) {
+                $personages[] = $value;
+            }
+        }
+        // add new session personage
+     session(['personages' => $personages]);
+    $pagestory->pers = json_encode($personages);
     $pagestory->save();
     // select all pages from story attach
     $story = Story::find($request->story_id);
@@ -84,7 +112,9 @@ public function maxorder($story_id)
     {
        if($request->p){
             $page=Pagestory::find($request->p);
-           return view('page.edit',  ['p' => $page->id,'page'=>$page,'backgrounds'=>$this->select_background()]);
+            $backgrounds=   Pict::where('path', 'storage/story/background/')->orderBy('id', 'desc')->get();
+            $personages=   Pict::where('path', 'storage/story/personage/')->orderBy('id', 'desc')->get();
+           return view('page.edit',  ['p' => $page->id,'page'=>$page,'backgrounds'=>$backgrounds,'personages'=>$personages]);
        }
         //return view('page.edit', compact('page'));
     }
@@ -99,16 +129,22 @@ public function maxorder($story_id)
         if($request->timer){
             $page->timer=$request->timer;
         }
+       // return $request->background;
         if($request->background){
-        // upload file background
-        $newName=$this->rename();
-        $type = $request->file('background')->getClientOriginalExtension();
-
-        $request->background->storeAs('public/story/background', $newName.'.'.$type);
-         $page->background=$newName.'.'.$type;
+            // upload file background
+            $page->background=$request->background;
         }
+        // add to json all request with personage_ in name
+        $personages=[];
+        foreach($request->all() as $key=>$value){
+            if(strpos($key,'personage_')!==false){
+                $personages[]=$value;
+            }
+        }
+        $page->pers=json_encode($personages);
+
         $page->save();
-         $pict_background=   Pict::where('path', 'storage/story/background/')->get();
+        $pict_background=   Pict::where('path', 'storage/story/background/')->get();
         $pict_personage=   Pict::where('path', 'storage/story/personage/')->get();
         return redirect()->route('page.edit', [
             'p' => $page->id,
@@ -141,10 +177,15 @@ public function maxorder($story_id)
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pagestory $page)
+    public function destroy(Pagestory $page, Request $request)
     {
         //
         $page->delete();
+        if($request->s){
+          $story=Story::find($request->s);
+          redirect()->route('story.show', compact('story'));
+        }
+        
         return redirect()->route('page.index');
     }
 }

@@ -52,7 +52,7 @@
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{ route('story.index') }}">
+                            <a class="dropdown-item" href="{{ route('stories') }}">
                                 {{ __('Story') }}
                             </a>
 

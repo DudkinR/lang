@@ -24,11 +24,30 @@
                 <div class="col-sm-12">
                     {!!$pagestory->text!!}
                     @if($pagestory->background)
-                     <img src="{{ asset('storage/story/background/' . $pagestory->background) }}" width="100" alt="background" class="img-thumbnail">
+                    <?php $bp=App\Models\Pict::find($pagestory->background); ?>
+                     <img src="{{ asset($bp->url) }}" width="100" alt="background" class="img-thumbnail">
                      @endif
+                     Pers
+                    <?php
+                    //json to array
+                    $mass_pers = json_decode($pagestory->pers);
+                    if($mass_pers==null){
+                        $mass_pers=[];
+                    };
+                    ?>
+                    @foreach($mass_pers as $pers)
+                        <?php $pers=App\Models\Pict::find($pers); ?>
+                        <img src="{{ asset($pers->url) }}" width="100" alt="pers" class="img-thumbnail">
+                    @endforeach
                      <a href="{{ route('page.edit',$pagestory) }}?p={{$pagestory->id}}" >
                     <button  class="btn btn-primary">Edit</button>
                     </a>
+                    <!-- destroy page button-->
+                    <form action="{{ route('page.destroy',$pagestory) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Delete page</button>
+                    </form>
                 </div>
             </div>
           @endforeach

@@ -16,3 +16,15 @@ indent_size = 2
 
 [docker-compose.yml]
 indent_size = 4
+
+
+[*.{yml,vue,js,html}]
+indent_size = 2
+
+[{package.json,.travis.yml}]
+indent_style = space
+indent_size = 2
+
+[lib/**.js]
+indent_style = space
+indent_size = 2

@@ -25,8 +25,18 @@ Route::resource('page', PageController::class);
 Route::resource('pict', PictController::class);
 Route::resource('tail', TailController::class);
 Route::resource('story', StoryController::class);
+
+
 Route::resource('test', TestController::class);
 
 Auth::routes();
 Route::get('tail/{id}', [App\Http\Controllers\TailController::class, 'show'])->name('tail.show');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/st', [StoryController::class, 'index'])->name('stories');
+Route::post('/st', [StoryController::class, 'store'])->name('story.store');
+
+
+
+
+
+

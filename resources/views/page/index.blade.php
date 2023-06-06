@@ -14,11 +14,18 @@
                     </div>
                     
                     <div class="col-sm-7">
-                        {{$page}}
+                        {!!$page->text!!}
+                        @if($page->background!==null)
+                            <?php
+                                $bp=App\Models\Pict::find($page->background);
+                            ?>
+                          <img src="{{ asset($bp->url) }}" alt="background" class="img-thumbnail">
+                          {{$bp->discription}}
+                        @endif
                     </div>
                     
                     <div class="col-sm-2">
-                       <a href="{{ route('page.edit') }}" >
+                       <a href="{{route('page.edit',$page->id)}}" >
                         <button  class="btn btn-primary">Edit</button>
                        </a>
                     </div>

@@ -53,7 +53,7 @@ class TailController extends Controller
     /**
      * Display the specified resource.
      */
-public function show(String $id, Request $request)
+     public function show(String $id, Request $request)
 {
     $story_id = $id;
     $user_id = Auth::user()->id;
@@ -64,29 +64,43 @@ public function show(String $id, Request $request)
         $this->store($story_id, $user_id);
         $tail = Tail::where('user_id', $user_id)->where('story_id', $story_id)->get();
     }
-
     // Order by Pagestory order
     $tail = $tail->sortBy('pagestory.order');
+    // if $tail where read = 0 is empty, do change read = 1 to read = 0 all
+    if ($tail->where('read', 0)->isEmpty()) {
+            foreach ($tail as $tail_item) {
+                $tail_item->read = 0;
+                $tail_item->save();
+            }
+        }
+    // $tail = Tail::where('user_id', $user_id)->where('story_id', $story_id)->get();
+    $firstTail = $tail->where('read', 0)->first();
+    if ($firstTail) {
+        $firstTail->read = 1;
+        $firstTail->save();
+    }
 
-    // Find first pagestory_id with read = 0
-    $pagestory_id = $tail->where('read', 0)->first()->pagestory_id;
-    $tail->where('pagestory_id', $pagestory_id)->first()->read = 1;
-    $tail->where('pagestory_id', $pagestory_id)->first()->save();
-
-    // Fetch the pagestory with pagination
-    $pagestory = Pagestory::find($pagestory_id);
+   
     $page = $request->query('page', 1); // Get the current page from the query parameters
-    $perPage = 10; // Number of pagestories per page
+    $perPage = 1; // Number of pagestories per page
     $totalPagestories = Pagestory::count(); // Total number of pagestories
-    $pagestories = Pagestory::orderBy('order')->paginate($perPage, ['*'], 'page', $page);
+    $pagestories = Pagestory::where('story_id', $story_id)
+    ->orderBy('order')->paginate($perPage, ['*'], 'page', $page);
+    $index = ($page - 1) * $perPage;
+    $pagestory= Pagestory::where('story_id', $story_id)
+    ->offset($index)
+    ->limit(1)
+    ->get();
 
+   // return $pagestory[0]->background;
     return view('tail.show', [
         'tail' => $tail,
-        'pagestory' => $pagestory,
         'pagestories' => $pagestories,
+         'pagestory'=> $pagestory->first(),
         'totalPagestories' => $totalPagestories,
     ]);
 }
+
 
 
     /**
