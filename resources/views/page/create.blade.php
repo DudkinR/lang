@@ -24,9 +24,15 @@
         <div class="row">
             <a id="toggleButton1" class="btn" href="#">Смотреть бек</a>
             <a id="toggleButton2" class="btn" href="#">Смотреть персонал</a>
+            {{session('background')}}
             <div class="col-sm-12" id="select_background" style="display: none;" >
             @foreach($backgrounds as $imgbck)
-                <input type="radio" name="background" value="{{$imgbck->id}}" id="back_{{$imgbck->id}}">
+
+                <input type="radio" name="background" value="{{$imgbck->id}}" id="back_{{$imgbck->id}}"
+                    @if(session('background') == $imgbck->id)
+                        checked
+                    @endif
+                >
               <img src="{{ asset($imgbck->url) }}" alt="{{$imgbck->discription}}" width="100"  class="img-thumbnail">
 
             @endforeach
@@ -34,7 +40,11 @@
             <div class="col-sm-12" id="select_personage" style="display: none;" >
   
             @foreach($personages as $imgprsn)
-                <input type="checkbox" name="personage_{{$imgprsn->id}}" value="{{$imgprsn->id}}" id="pers_{{$imgprsn->id}}">
+                <input type="checkbox" name="personage_{{$imgprsn->id}}" value="{{$imgprsn->id}}" id="pers_{{$imgprsn->id}}"
+                @if(session('personages')!==null&&in_array($imgprsn->id, session('personages')))
+                    checked
+                @endif
+                >
               <img src="{{ asset($imgprsn->url) }}" alt="{{$imgprsn->discription}}" width="100"  class="img-thumbnail">
 
             @endforeach

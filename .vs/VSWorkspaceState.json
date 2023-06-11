@@ -1,17 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\app",
-    "\\app\\Http",
-    "\\app\\Http\\Controllers",
     "\\public",
     "\\public\\js",
     "\\public\\js\\games",
     "\\resources",
     "\\resources\\views",
+    "\\resources\\views\\games",
     "\\resources\\views\\page",
-    "\\resources\\views\\tail"
+    "\\resources\\views\\tail",
+    "\\routes"
   ],
-  "SelectedNode": "\\app\\Http\\Controllers\\TailController.php",
+  "SelectedNode": "\\vite.config.js",
   "PreviewInSolutionExplorer": false
 }

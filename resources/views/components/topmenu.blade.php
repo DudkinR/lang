@@ -62,6 +62,9 @@
                             <a class="dropdown-item" href="{{ route('pict.index') }}">
                                 {{ __('Pict') }}
                             </a>
+                            <a class="dropdown-item" href="{{ route('game.index') }}">
+								{{ __('Game') }}
+                            </a>
                         </div>
                     </li>
 

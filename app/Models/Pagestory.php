@@ -14,12 +14,17 @@ class Pagestory extends Model
             'text',
             'timer',
             'background',
+            'game',
             'story_id', // Add the 'story_id' to the $fillable array
     ];
 
     public function story()
     {
         return $this->belongsTo(Story::class);
+    }
+    public function games()
+    {
+        return $this->belongsToMany(Game::class, 'game_pagestory');
     }
 
 }

@@ -74,12 +74,10 @@ class StoryController extends Controller
     public function update(Request $request, Story $story)
     {
         //
-        $request->validate([
-                    'title' => 'required',
-                    'anatation' => 'required',
-                    'lng' => 'required',
-                ]);
-        $story->update($request->all());
+   
+        $story->title=$request->title;
+        $story->anatation=$request->anatation;
+       // $story->lng=$request->lng;
         $story->save();
         $pagestories= $story->pagestory()->get();
         return redirect()->route('story.show', compact('story','pagestories'));

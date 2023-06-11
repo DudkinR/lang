@@ -34,6 +34,13 @@ Route::get('tail/{id}', [App\Http\Controllers\TailController::class, 'show'])->n
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/st', [StoryController::class, 'index'])->name('stories');
 Route::post('/st', [StoryController::class, 'store'])->name('story.store');
+Route::get('/game', [App\Http\Controllers\GameController::class, 'index'])->name('game.index');
+Route::get('/game/create', [App\Http\Controllers\GameController::class, 'create'])->name('game.create');
+Route::post('/game', [App\Http\Controllers\GameController::class, 'store'])->name('game.store');
+Route::get('/game/{id}', [App\Http\Controllers\GameController::class, 'show'])->name('game.show');
+Route::get('/game/{id}/edit', [App\Http\Controllers\GameController::class, 'edit'])->name('game.edit');
+Route::put('/game/{id}', [App\Http\Controllers\GameController::class, 'update'])->name('game.update');
+Route::delete('/game/{id}', [App\Http\Controllers\GameController::class, 'destroy'])->name('game.destroy');
 
 
 

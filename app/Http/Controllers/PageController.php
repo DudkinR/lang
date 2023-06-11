@@ -133,7 +133,9 @@ public function maxorder($story_id)
         if($request->background){
             // upload file background
             $page->background=$request->background;
+            session(['background' => $request->background]);
         }
+
         // add to json all request with personage_ in name
         $personages=[];
         foreach($request->all() as $key=>$value){
@@ -142,6 +144,7 @@ public function maxorder($story_id)
             }
         }
         $page->pers=json_encode($personages);
+        session(['personages' => $personages]);
 
         $page->save();
         $pict_background=   Pict::where('path', 'storage/story/background/')->get();

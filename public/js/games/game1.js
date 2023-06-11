@@ -1,114 +1,101 @@
+
 function startGame(data) {
-    const show_task = document.getElementById("show_task");
-    // add class text-center to show_task
-    show_task.classList.add('text-center');
+  var ex, min, max, count;
 
-    function generateExpression(data) {
-        var num1 = getRandomNumber(data['min'], data['max']);
-        var num2 = getRandomNumber(data['min'], data['max']);
-        var action = data['ex'];
-
-        var expression = num1 + ' ' + action + ' ' + num2;
-
-        // Сохраняем правильный ответ для проверки
-        var correctAnswer = eval(num1 + action + num2);
-
-        // Создаем элементы для отображения выражения
-        var expressionElement = document.createElement('H1');
-        expressionElement.id = 'exElement';
-        expressionElement.textContent = expression;
-
-        var resultText = document.createElement('H1');
-        resultText.id = 'resultText';
-        resultText.textContent = '';
-        // hide resultText
-        resultText.style.display = 'none';
-
-        var inputElement = document.createElement('input');
-        inputElement.id='UserInput';
-        inputElement.type = 'text';
-        // add css class to inputElement
-         inputElement.classList.add('input_big');
-
-
-        var buttonElement = document.createElement('button');
-        buttonElement.textContent = 'Проверить';
-        buttonElement.id = 'btn_result';
-        buttonElement.classList.add('btn', 'btn-success', 'btn-lg', 'btn-block');
-        butonElement.addEventListener('click', function () {
-            checkAnswer(correctAnswer);
-        });
-
-        var resultElement = document.createElement('input');
-        resultElement.type = 'hidden';
-        resultElement.id = 'resultUser';
-        //value = correctAnswer;
-        resultElement.value = correctAnswer
-
-
-
-        // Очищаем содержимое элемента show_task перед добавлением новых элементов
-        show_task.innerHTML = '';
-
-        // Добавляем элементы в элемент show_task
-        show_task.appendChild(expressionElement);
-        show_task.appendChild(resultText);
-        show_task.appendChild(inputElement);
-        show_task.appendChild(buttonElement);
-        show_task.appendChild(resultElement);
-        // focus on inputElement
-        inputElement.focus();
-
+  for (var key in data) {
+    if (data.hasOwnProperty(key)) {
+      var value = data[key];
+      if (value.name == 'ex')
+        ex = value.value;
+      else if (value.name == 'min')
+        min = parseInt(value.value);
+      else if (value.name == 'max')
+        max = parseInt(value.value);
+      else if (value.name == 'count')
+        count = parseInt(value.value);
     }
+  }
 
-    // Функция для проверки ответа
-    function checkAnswer(correctAnswer) {
+  var gameContainer = document.getElementById('show_task');
+  gameContainer.innerHTML = '';
 
-        var userAnswer = document.getElementById('UserInput').value;
-      //  alert(userAnswer);
-        var resultElement = document.getElementById('resultUser').value;
-      //  alert(resultElement);
-        var resultText = document.getElementById('resultText');
-        var buttonElement=document.getElementById('btn_result');
-        resultText.style.display = 'block';
-        if (userAnswer.trim() === '') {
-            resultText.textContent = 'Введите ответ.';
-           
-            return;
-        }
+  // Генерация случайных целых чисел
+  var num1 = getRandomInt(min, max);
+  var num2 = getRandomInt(min, max);
 
-        if (parseInt(userAnswer) == resultElement) {
-            alert(userAnswer);
-            resultText.textContent = 'Верно
-            buttonElement.textContent = 'Играть еще';
-            // delete previous event listener
-            buttonElement.removeEventListener('click', function () {
-                checkAnswer(correctAnswer);
+  // Создание элементов игры
+  var taskElement = document.createElement('h1');
+  taskElement.textContent = 'Выполните действие: ' + num1 + ' ' + ex + ' ' + num2;
 
-            buttonElement.addEventListener('click', function () {
-                generateExpression(data);
-            });
+  var countInput = document.getElementById('count');
 
+  var inputElement = document.createElement('input');
+  inputElement.type = 'text';
+  inputElement.id = 'answer';
 
-            return;
+  var resultElement = document.createElement('p');
+  resultElement.id = 'result';
 
-        } else {
-            resultText.textContent = 'Неверно. Правильный ответ: ' + correctAnswer;
-            return;
-        }
+  var checkButton = document.createElement('button');
+  checkButton.textContent = 'Проверить';
+  checkButton.id = 'check-button';
 
-        // Генерируем новое выражение после проверки
-//generateExpression(data);
-    //    document.querySelector('#show_task input').value = '';
+  var nextButton = document.createElement('button');
+  nextButton.textContent = 'Следующее задание';
+  nextButton.style.display = 'none';
+  nextButton.id = 'next-button';
+  var rcount = parseInt(countInput.value);
+  // Обработчик события для кнопки "Проверить"
+  var checkAnswer = function () {
+    var answer = parseInt(inputElement.value);
+
+    if (answer === eval(num1 + ex + num2)) {
+      resultElement.textContent = 'Ответ верный!';
+      nextButton.style.display = 'block';
+      checkButton.style.display = 'none';
+      rcount++;
+    } else {
+      resultElement.textContent = 'Ответ неверный!';
+      inputElement.value = '';
+      if (rcount > 0)
+        rcount--;
     }
+    countInput.value = rcount;
+  };
 
+  // Обработчик события для кнопки "Следующее задание"
+  var nextTask = function () {
+    inputElement.value = '';
+    resultElement.textContent = '';
+    nextButton.style.display = 'none';
+    checkButton.style.display = 'block';
 
-    // Генерируем первое выражение при загрузке страницы
-    generateExpression(data);
+    if (rcount >= count)
+      gameContainer.innerHTML = '<h1>Вы прошли тест!</h1>';
+    else
+      startGame(data);
+  };
 
-    function getRandomNumber(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
+  // Назначение обработчиков событий
+  checkButton.addEventListener('click', checkAnswer);
+  nextButton.addEventListener('click', nextTask);
+
+  // Добавление элементов в контейнер игры
+  gameContainer.appendChild(taskElement);
+  gameContainer.appendChild(inputElement);
+  gameContainer.appendChild(resultElement);
+  gameContainer.appendChild(checkButton);
+  gameContainer.appendChild(nextButton);
+  resultElement.focus();
+
 }
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
 
 

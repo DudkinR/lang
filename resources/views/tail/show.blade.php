@@ -60,6 +60,30 @@
           display: block;
         }
 
+        .row {
+            margin-bottom: 20px;
+            
+        }
+        .card  {
+            background-color: rgba(255, 255, 255, 0.5);
+            width: 60%;
+            margin: 0 auto; /* Центрирование контейнера по горизонтали */
+
+        }
+        .card- body {
+            padding: 20px;
+        }
+        .pagination {
+            margin: 0 auto; /* Центрирование контейнера по горизонтали */
+        }
+        .col-sm-1   {
+        padding: 0px;
+    
+        }
+        .col-sm-8   {
+        padding: 0px;
+    
+        }
 
     </style>
 
